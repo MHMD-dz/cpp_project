@@ -50,18 +50,23 @@ int who_win(game player , game pc ){
     else  if ( pc == rock && player == rock || pc == paper && player == paper || pc == scisser && player == scisser)
     {
         return 0 ;}
+        return 0 ;
 }
 
-void show_winner(int number){
+void show_winner(int number , int rounde ){
+    cout << "-------------------- THE ROUNDE " << rounde << " --------------------" << endl ;
+    cout << "player pointes : " << player_points << "********" << "  pc pointes " << pc_points << endl ;
     if (number > 0)
     {
         cout << "the player win this rounde \a" << endl ;
         system("color 2F");
+        player_points ++ ;
     }
     else if (number < 0)
     {
         cout << "the pc win this rounde \a" << endl ;
         system("color 4E");
+        pc_points ++ ;
     }
     else if (number == 0)
     {
@@ -78,12 +83,22 @@ int get_number(string message){
     return number;
 }
 
+void start_the_game(){
+    int round = 0 , i ;
+    while (round > 10 || round < 1)
+    {
+    round = get_number("Enter how mach rounde you want to play : ");}
+    for ( i = 1; i <= round; i++)
+    {
+        show_winner(who_win(get_choise("what is yor choise \"(1) for rock , (2) for paper , (3) for scisser \": "),pc_choise()),round);
+
+    }
+    
+
+}
 
 
 int main(){
     srand(time(0));
-    show_winner(who_win(get_choise("what is yor choise \"(1) for rock , (2) for paper , (3) for scisser \": "),pc_choise()));
-    show_winner(who_win(get_choise("what is yor choise \"(1) for rock , (2) for paper , (3) for scisser \": "),pc_choise()));
-    show_winner(who_win(get_choise("what is yor choise \"(1) for rock , (2) for paper , (3) for scisser \": "),pc_choise()));
-    show_winner(who_win(get_choise("what is yor choise \"(1) for rock , (2) for paper , (3) for scisser \": "),pc_choise()));
+    start_the_game();
 }
