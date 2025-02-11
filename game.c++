@@ -59,7 +59,7 @@ int who_win(game player , game pc ){
 
 void show_winner(int number , int rounde ){
     cout << "               -------------------- THE ROUNDE " << rounde << " --------------------" << endl << endl;
-    cout << "                   player pointes : " << player_points << "   ********" << "  pc pointes " << pc_points << endl<< endl ;
+    cout << "              player pointes : " << player_points << "   ********" << "  pc pointes " << pc_points << endl<< endl ;
     if (number > 0)
     {
         
@@ -88,6 +88,17 @@ int get_number(string message){
     return number;
 }
 
+bool play_again(string message){
+    int answer ;
+    cout << message << endl ;
+    cin >> answer ;
+    if (answer == 1)
+    {
+        return true ;
+    }
+    return false ;
+}
+
 void start_the_game(){
     int round = 0 , i ;
     while  (round < 1 || round > 10)
@@ -113,6 +124,13 @@ void start_the_game(){
             cout<< " THE PC WON THIS GAME  " << pc_points << " TO " << player_points << endl ;
             system("color 4E");
         }
+    if (play_again("do yo want to play again  (1) for yes and (0) for no : "))
+    {
+        player_points = 0 ; pc_points = 0 ;
+        start_the_game();
+    }
+    
+    
 }
 
 
