@@ -41,37 +41,42 @@ game pc_choise(){
 }
 
 int who_win(game player , game pc ){
-    if ( player == rock && pc == scisser || player == paper && pc == rock || player == scisser && pc == paper)
-    {
-        return 1 ;}
-    else if ( pc == rock && player == scisser || pc == paper && player == rock || pc == scisser && player == paper)
-    {
-        return -1 ;}
-    else  if ( pc == rock && player == rock || pc == paper && player == paper || pc == scisser && player == scisser)
-    {
-        return 0 ;}
-        return 0 ;
+    if (player == pc){
+        pc_points ++ ;
+        player_points ++ ;
+        return 0; 
+    } 
+
+    if ((player == rock && pc == scisser) || 
+    (player == paper && pc == rock) || 
+    (player == scisser && pc == paper)) 
+{   player_points ++ ;
+    return 1; 
+}
+    pc_points ++ ;
+    return -1;
 }
 
 void show_winner(int number , int rounde ){
-    cout << "-------------------- THE ROUNDE " << rounde << " --------------------" << endl ;
-    cout << "player pointes : " << player_points << "********" << "  pc pointes " << pc_points << endl ;
+    cout << "               -------------------- THE ROUNDE " << rounde << " --------------------" << endl << endl;
+    cout << "                   player pointes : " << player_points << "   ********" << "  pc pointes " << pc_points << endl<< endl ;
     if (number > 0)
     {
-        cout << "the player win this rounde \a" << endl ;
+        
+        cout << "    the player win this rounde \a" << endl << endl ;
         system("color 2F");
-        player_points ++ ;
+        
     }
     else if (number < 0)
     {
-        cout << "the pc win this rounde \a" << endl ;
+        cout << "   the pc win this rounde \a" << endl<< endl ;
         system("color 4E");
-        pc_points ++ ;
+        
     }
     else if (number == 0)
     {
-        cout << "this round wase a tie \a" << endl ;
-        system("color 6C");
+        cout << "   this round wase a tie \a" << endl << endl;
+        system("color 7C");
     }
     
 }
@@ -85,16 +90,29 @@ int get_number(string message){
 
 void start_the_game(){
     int round = 0 , i ;
-    while (round > 10 || round < 1)
+    while  (round < 1 || round > 10)
     {
     round = get_number("Enter how mach rounde you want to play : ");}
     for ( i = 1; i <= round; i++)
     {
-        show_winner(who_win(get_choise("what is yor choise \"(1) for rock , (2) for paper , (3) for scisser \": "),pc_choise()),round);
-
+        show_winner(who_win(get_choise("what is yor choise \"(1) for rock , (2) for paper , (3) for scisser \": "),pc_choise()),i);
     }
-    
-
+    cout << endl << endl ;
+    if ( pc_points == player_points)
+        {
+            cout<< " THIS GAME WAS A TIE  "  << player_points << " TO " << pc_points << endl ;
+            system("color 7C");
+        }
+    if ( pc_points < player_points)
+        {
+            cout<< " THE PLAYER WON THIS GAME  " << player_points << " TO " << pc_points << endl ;
+            system("color 2F");
+        }
+    if ( pc_points > player_points)
+        {
+            cout<< " THE PC WON THIS GAME  " << pc_points << " TO " << player_points << endl ;
+            system("color 4E");
+        }
 }
 
 
