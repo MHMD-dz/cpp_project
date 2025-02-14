@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std ;
 
-enum operation { plus , subtract , multiplay , division };
+enum operation { pluus = 1 , subtract , multiplay , division };
 enum hardness { easy , midiom , hard , so_hard , mix } ;
 
 struct math_game{
@@ -11,6 +11,13 @@ struct math_game{
     hardness level ;
     int answer ;
 };
+
+int get_number(string masseg){
+    int number ;
+    cout << masseg ;
+    cin >> number ;
+    return number ;
+}
 
 int random_number( int from , int to){
     int random ;
@@ -37,7 +44,7 @@ hardness level_of_game ( math_game &math ){
     default:
         break;
     }
-
+    return math.level = easy ;
 }
 
 operation game_op (math_game &math ){
@@ -46,7 +53,7 @@ operation game_op (math_game &math ){
     switch (number)
     {
         case 1 :
-        return math.op = plus ;
+        return math.op = pluus ;
         case 2 :
         return math.op = subtract ;
         case 3 :
@@ -55,7 +62,7 @@ operation game_op (math_game &math ){
         return math.op = division ;
     
     default:
-        return math.op = plus ;
+        return math.op = pluus ;
     }
 }
 
@@ -85,7 +92,7 @@ char op_char (math_game &math){
 
         switch (math.op)
         {
-            case plus :
+            case pluus :
             return '+' ;
             case subtract :
             return '-';
@@ -103,7 +110,7 @@ bool chacking (math_game &math){
     int number ;
     switch (math.op)
     {
-        case plus :
+        case pluus :
         number = math.first_number + math.second_number ;
         case subtract :
         number = math.first_number - math.second_number ;
@@ -122,7 +129,7 @@ bool chacking (math_game &math){
     return false ;
 }
 
-void game(math_game &math){
+void gamee(math_game &math){
     char op ;
     op = op_char(math) ;
     cout << "\t" <<  math.first_number << endl ;
@@ -143,7 +150,19 @@ void game(math_game &math){
 
 }
 
+void start_game(math_game &game){
+    int quastion ;
+    quastion = get_number("Enter the number of quastion you want: ");
+    level_of_game(game) ;
+    game_op(game) ;
+    game_numb(game) ;
+    op_char(game) ;
+    gamee(game) ;
+}
+
 
 int main(){
     srand(time(0));
+    math_game games ;
+    start_game(games);
 }
