@@ -1,8 +1,8 @@
 #include<iostream>
 using namespace std ;
 
-enum operation { pluus = 1 , subtract , multiplay , division };
-enum hardness { easy , midiom , hard , so_hard , mix } ;
+enum operation { pl_us = 1 , subtract , multiply , division };
+enum hardness { easy , medium , hard , so_hard , mix } ;
 
 struct math_game{
     int first_number ;
@@ -12,9 +12,9 @@ struct math_game{
     int answer ;
 };
 
-int get_number(string masseg){
+int get_number(string message){
     int number ;
-    cout << masseg ;
+    cout << message ;
     cin >> number ;
     return number ;
 }
@@ -34,7 +34,7 @@ hardness level_of_game ( math_game &math ){
         case 1 :
         return math.level = easy ;
         case 2 :
-        return math.level = midiom ;
+        return math.level = medium ;
         case 3 :
         return math.level = hard ;
         case 4 :
@@ -53,35 +53,38 @@ operation game_op (math_game &math ){
     switch (number)
     {
         case 1 :
-        return math.op = pluus ;
+        return math.op = pl_us ;
         case 2 :
         return math.op = subtract ;
         case 3 :
-        return math.op = multiplay ;
+        return math.op = multiply ;
         case 4 :
         return math.op = division ;
     
     default:
-        return math.op = pluus ;
+        return math.op = pl_us ;
     }
 }
 
 void game_numb( math_game &math ){
-    math.level = level_of_game(math);
     switch (math.level)
     {
         case easy :
         math.first_number = random_number(1,10) ;
         math.second_number = random_number(1,10) ;
-        case midiom :
+        break;
+        case medium :
         math.first_number = random_number(10,100) ;
         math.second_number = random_number(10,100) ;
+        break;
         case hard :
         math.first_number = random_number(100,1000) ;
         math.second_number = random_number(100,1000) ;
+        break;
         case so_hard :
-        math.first_number = random_number(1000,00010000) ;
+        math.first_number = random_number(1000,10000) ;
         math.second_number = random_number(1000,10000) ;
+        break;
     default:
         break;
     }
@@ -92,11 +95,11 @@ char op_char (math_game &math){
 
         switch (math.op)
         {
-            case pluus :
+            case pl_us :
             return '+' ;
             case subtract :
             return '-';
-            case multiplay :
+            case multiply :
             return '*'  ;
             case division :
             return '/' ;
@@ -106,15 +109,15 @@ char op_char (math_game &math){
         }
 }
 
-bool chacking (math_game &math){
+bool checking (math_game &math){
     int number ;
     switch (math.op)
     {
-        case pluus :
+        case pl_us :
         number = math.first_number + math.second_number ;
         case subtract :
         number = math.first_number - math.second_number ;
-        case multiplay :
+        case multiply :
         number = math.first_number * math.second_number ;
         case division :
         number = math.first_number / math.second_number ;
@@ -137,7 +140,7 @@ void gamee(math_game &math){
     cout << "\t" <<  math.second_number<< endl ;
     cout << "_________________" << endl ;
     cin >> math.answer ;
-    if (chacking(math))
+    if (checking(math))
     {
         cout << "NICE YOU ARE RIGHT" << endl ;
         system("color 2F");}
@@ -151,14 +154,19 @@ void gamee(math_game &math){
 }
 
 void start_game(math_game &game){
-    int quastion ;
-    quastion = get_number("Enter the number of quastion you want: ");
+    int question , i ;
+    question = get_number("Enter the number of question you want: ");
     level_of_game(game) ;
     game_op(game) ;
-    game_numb(game) ;
     op_char(game) ;
-    gamee(game) ;
-}
+    for ( i = 1 ; i <= question; i++)
+    {
+        game_numb(game) ;
+        gamee(game) ;
+    }
+    
+    
+} 
 
 
 int main(){
