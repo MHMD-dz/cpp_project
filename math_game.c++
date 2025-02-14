@@ -1,8 +1,9 @@
 #include<iostream>
 using namespace std ;
 
+int points = 0;
 enum operation { pl_us = 1 , subtract , multiply , division };
-enum hardness { easy , medium , hard , so_hard , mix } ;
+enum hardness { easy , medium , hard , so_hard } ;
 
 struct math_game{
     int first_number ;
@@ -25,44 +26,33 @@ int random_number( int from , int to){
     return random ;
 }
 
-hardness level_of_game ( math_game &math ){
-    int number ;
-    cout << "How hard you want the game to be : [1] Easy , [2] mediom , [3] hard , [4] so hard , [5] mix : " ;
-    cin >> number ;
-    switch (number)
+void level_of_game ( math_game &math , int number ){
+    if (number == 5 )
     {
-        case 1 :
-        return math.level = easy ;
-        case 2 :
-        return math.level = medium ;
-        case 3 :
-        return math.level = hard ;
-        case 4 :
-        return math.level = so_hard;
-        case 5 :
-        return math.level = mix ;
-    default:
-        break;
+        number = random_number(1,4) ;
     }
-    return math.level = easy ;
+    
+
+    switch (number) {
+        case 1: math.level = easy; break;
+        case 2: math.level = medium; break;
+        case 3: math.level = hard; break;
+        case 4: math.level = so_hard; break;
+        default: math.level = easy;
+    }
 }
 
-operation game_op (math_game &math ){
-    int number ;
-    number = random_number(1,4) ;
-    switch (number)
+void game_op (math_game &math , int number ){
+    if (number == 5 )
     {
-        case 1 :
-        return math.op = pl_us ;
-        case 2 :
-        return math.op = subtract ;
-        case 3 :
-        return math.op = multiply ;
-        case 4 :
-        return math.op = division ;
-    
-    default:
-        return math.op = pl_us ;
+     number = random_number(1,4) ;
+    }
+    switch (number) {
+        case 1: math.op = pl_us; break;
+        case 2: math.op = subtract; break;
+        case 3: math.op = multiply; break;
+        case 4: math.op = division; break;
+        default: math.op = pl_us;
     }
 }
 
@@ -115,12 +105,16 @@ bool checking (math_game &math){
     {
         case pl_us :
         number = math.first_number + math.second_number ;
+        break;
         case subtract :
         number = math.first_number - math.second_number ;
+        break;
         case multiply :
         number = math.first_number * math.second_number ;
+        break;
         case division :
         number = math.first_number / math.second_number ;
+        break;
     
     default:
         number = math.first_number + math.second_number ;
@@ -142,11 +136,13 @@ void gamee(math_game &math){
     cin >> math.answer ;
     if (checking(math))
     {
-        cout << "NICE YOU ARE RIGHT" << endl ;
-        system("color 2F");}
+        cout << "NICE YOU ARE RIGHT :-)" << endl ;
+        system("color 2F");
+        points ++ ;
+    }
     else
     {
-        cout << "NO YOU ARE WRONG" << endl ;
+        cout << "NO YOU ARE WRONG :-(" << endl ;
         system("color 4E");
     }
     
@@ -154,14 +150,31 @@ void gamee(math_game &math){
 }
 
 void start_game(math_game &game){
-    int question , i ;
+    int question , i , lvl_number , op_number ;
+    
+    
     question = get_number("Enter the number of question you want: ");
-    level_of_game(game) ;
-    game_op(game) ;
-    op_char(game) ;
+    cout << "How hard you want the game to be : [1] Easy  , [2] mediom , [3] hard , [4] so hard , [5] mix : " ;
+    cin >> lvl_number ;
+    cout << "What operation you want  the question to by: [1] plus , [2] subtract , [3] multiply , [4] division , [5] random : " ;
+    cin >> op_number ;
+    level_of_game(game , lvl_number) ;
+    game_op(game, op_number ) ;
+    
     for ( i = 1 ; i <= question; i++)
     {
+        if (lvl_number == 5 )
+        {
+            level_of_game(game , lvl_number) ;
+        }
+        if (op_number == 5)
+        {
+            game_op(game, op_number ) ;
+        }
+        
+        
         game_numb(game) ;
+        cout << "Question [" << i << "\\" << question << "] : " << endl ;
         gamee(game) ;
     }
     
@@ -173,4 +186,5 @@ int main(){
     srand(time(0));
     math_game games ;
     start_game(games);
+    return 0 ;
 }
