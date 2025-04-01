@@ -145,10 +145,10 @@ void deletAC(int number , vector <Sclient> client){
     cout << "the client detail : " << endl ;
     cout << "-----------------------------------" << endl ;
     cout << " client account number : " << client[number].ac_number << endl ;
-    cout << " client pine number : " << client[number].pin << endl ; 
-    cout << " client name : " << client[number].name << endl ; 
-    cout << " client phone number : " << client[number].phone << endl ; 
-    cout << " client balance : " << client[number].balance << endl;
+    cout << " client pine number    : " << client[number].pin << endl ; 
+    cout << " client name           : " << client[number].name << endl ; 
+    cout << " client phone number   : " << client[number].phone << endl ; 
+    cout << " client balance        : " << client[number].balance << endl;
     cout << "are you sure you whant to delet this client (y/n): " ;
     cin >> delett ;
     if (delett == 'y'){
@@ -172,30 +172,47 @@ void deletAC(int number , vector <Sclient> client){
         << client[i].phone << "#//#" 
         << client[i].balance << endl;
     }
-    }else{
+    }else if(!file.is_open()){
         cout << "ERROR in reading the file " << endl ;
     }
 }
 void updateC(int number , vector <Sclient> client){
-    ofstream file("bank_info/database.txt" , ios::out) ;
+    cout << "-----------------------------------" << endl ;
+    cout << "     UPDATE CLIENT INFO SCREAN    " << endl ;
+    cout << "-----------------------------------" << endl ;
+    ofstream file("bank_info/database.txt" , ios::app) ;
+    Sclient updatt ;
+    bool sure = false ;
+    char updatte ;
     if (number == -1 ){
         cout << "thi account number dosn't exist in the database !" << endl ;
         return;
     }
-    if (file.is_open())
-    for (int i = 0; i < client.size(); i++){
+    cout << "Enter the new acount pine: " ;
+    updatt.ac_number = client[number].ac_number ;
+    cin >> updatt.pin ;
+    cin.ignore();
+    cout << "Enter the new name: " ;
+    getline(cin,updatt.name);
+    cout << "Enter the new phone number: " ;
+    cin >> updatt.phone ;
+    cout << "Enter the new acount balance: " ;
+    cin >> updatt.balance ;
+    cout << endl << "are you sure you whant to update this client (y/n): " ;
+    cin >> updatte ;
+    if (updatte == 'y'){
+        sure = true ;
+    }
+    if (sure)
+    {
+        ofstream file("bank_info/database.txt" , ios::out) ;
+    }
+    if (file.is_open() && sure){
+    for (int i = 0; i < client.size(); i++)
     {
         if (i == number)
         {
-            cout << "Enter the new acount pine: " ;
-            cin >> client[i].pin ;
-            cin.ignore();
-            cout << "Enter the new name: " ;
-            getline(cin,client[i].name);
-            cout << "Enter the new phone number: " ;
-            cin >> client[i].phone ;
-            cout << "Enter the new acount balance: " ;
-            cin >> client[i].balance ;
+            client[i] = updatt;
         }
         
         file << client[i].ac_number << "#//#" 
@@ -204,10 +221,34 @@ void updateC(int number , vector <Sclient> client){
         << client[i].phone << "#//#" 
         << client[i].balance << endl;
     }
-    }else{
+    }else if(!file.is_open()){
         cout << "ERROR in reading the file " << endl ;
     }
 
+}
+
+void find_client(vector <Sclient> client){
+    cout << "-----------------------------------" << endl ;
+    cout << "       FIND CLIENT SCREAN    " << endl ;
+    cout << "-----------------------------------" << endl ;
+    string ac ;
+    cout << "Enter the account number of the client ur looking for: " ;
+    cin >> ac ;
+    for (int i = 0; i < client.size() ; i++)
+    {
+        if (client[i].ac_number == ac )
+        {
+            cout << "the client detail : " << endl ;
+            cout << "-----------------------------------" << endl ;
+            cout << " client account number : " << client[i].ac_number << endl ;
+            cout << " client pine number    : " << client[i].pin << endl ; 
+            cout << " client name           : " << client[i].name << endl ; 
+            cout << " client phone number   : " << client[i].phone << endl ; 
+            cout << " client balance        : " << client[i].balance << endl;
+        }
+        
+    }
+    
 }
 
 void output(){
@@ -240,21 +281,27 @@ void output(){
         addC(fill_struct());
         break;
     case 3 :
-    cout << "enter the account number of the client you whant to delet: " ;
-    cin >> ACN ;
-    deletAC(whereExist(vclient,ACN),vclient);
+        cout << "enter the account number of the client you whant to delet: " ;
+        cin >> ACN ;
+        deletAC(whereExist(vclient,ACN),vclient);
     break;
     case 4 :
-    cout << "enter the account number of the client you whant to update: " ;
-    cin >> ACN ;
-    updateC(whereExist(vclient,ACN),vclient);
-    break;
+        cout << "enter the account number of the client you whant to update: " ;
+        cin >> ACN ;
+        updateC(whereExist(vclient,ACN),vclient);
+        break;
+    case 5 :
+        find_client(vclient);
+        break;
     case 6 : 
+        cout << "-----------------------------------" << endl ;
+        cout << "       GOOD BYE   " << endl ;
+        cout << "-----------------------------------" << endl ;
         return;
         break;
     
     default:
-    cout << "ERROR enter a valide number !" << endl ;
+        cout << "ERROR enter a valide number !" << endl ;
         break;
     }
     cin.ignore();
