@@ -98,11 +98,49 @@ void writ_info_toFile(Sclient client){
     
 }
 
+int whereExist(vector <Sclient> client , string ACN){
+    for (int i = 0; i < client.size() ; i++)
+    {
+        if ( ACN == client[i].ac_number)
+        {
+            return i ;
+        }
+        
+    }
+    return -1 ;
+} 
+
+void deletAC(int number , vector <Sclient> client){
+    ofstream file("bank_info/database.txt" , ios::out) ;
+    if (number == -1 ){
+        cout << "thi account number dosn't exist in the database !" << endl ;
+        return;
+    }
+    if (file.is_open())
+    for (int i = 0; i < client.size(); i++){
+    {
+        if (i == number)
+        {
+            continue;
+        }
+        
+        file << client[i].ac_number << "#//#" << client[i].pin << "#//#" << client[i].name << "#//#" << client[i].phone << "#//#" << client[i].balance << endl;
+    }
+    }else{
+        cout << "ERROR in reading the file " << endl ;
+    }
+
+}
+
+
 void output(){
     vector <Sclient> vclient ;
     int number ;
+    string ACN ;
+    
     do
     {
+    vclient = fileExtracter("bank_info/database.txt") ;
     cout << "=============================================" << endl ;
     cout << "               MAIN MENUE SCREEN    " << endl ;
     cout << "=============================================" << endl ;
@@ -118,11 +156,16 @@ void output(){
     switch (number)
     {
     case 1 :
-        showClient(fileExtracter("bank_info/database.txt")) ;
+        showClient(vclient) ;
         break;
     case 2 : 
         writ_info_toFile(fill_struct());
         break;
+    case 3 :
+    cout << "enter the account number of the client you whant to delet: " ;
+    cin >> ACN ;
+    deletAC(whereExist(vclient,ACN),vclient);
+    break;
     case 6 : 
         return;
         break;
