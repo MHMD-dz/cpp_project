@@ -270,14 +270,31 @@ int ShowMainMenue(){
     cout << "[3] delet client" << endl ;
     cout << "[4] update client info " << endl ;
     cout << "[5] find client" << endl ;
-    cout << "[6] exit " << endl ;
+    cout << "[6] transaction" << endl ;
+    cout << "[7] exit " << endl ;
     cout << "=============================================" << endl ;
-    cout << "enter the number of the operation you whant to do: [1 to 6]: " ;
+    cout << "enter the number of the operation you whant to do: [1 to 7]: " ;
     cin >> number ;
     cout << endl ;
     return number ;
 }
 
+int ShowTransactionMenue(){
+    int number ;
+    cout << "=============================================" << endl ;
+    cout << "               TRANSACTION MENUE SCREEN    " << endl ;
+    cout << "=============================================" << endl ;
+    cout << "[1] deposit" << endl ;
+    cout << "[2] withdraw" << endl ;
+    cout << "[3] total balance " << endl ;
+    cout << "[4] main menue " << endl ;
+    cout << "=============================================" << endl ;
+    cout << "enter the number of the operation you whant to do: [1 to 4]: " ;
+    cin >> number ;
+    cout << endl ;
+    return number ;
+}
+    
 void ShowChois(int number){
     vector <Sclient> vclient ;
     string ACN ;
@@ -310,6 +327,10 @@ void ShowChois(int number){
         break;
 
     case 6 :
+
+    break;
+
+    case 7 :
         return ;
 
     default:
