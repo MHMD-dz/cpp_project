@@ -235,6 +235,42 @@ void updateC(int number , vector <Sclient> client){
 
 }
 
+
+void updateC2(int number , vector <Sclient> client){
+    Sclient updatt ;
+    char updatte ;
+    if (number == -1 ){
+        cout << "this account number dosn't exist in the database !" << endl ;
+        return;
+    }
+    updatt.ac_number = client[number].ac_number ;
+    updatt.pin = client[number].pin ;
+    updatt.name = client[number].name ;
+    updatt.phone = client[number].phone ;
+    updatt.balance = client[number].balance ;
+
+    
+    ofstream file("bank_info/database.txt" , ios::out) ;
+    if (file.is_open()){
+    for (int i = 0; i < client.size(); i++)
+    {
+        if (i == number)
+        {
+            client[i] = updatt;
+        }
+        
+        file << client[i].ac_number << "#//#" 
+        << client[i].pin << "#//#" 
+        << client[i].name << "#//#" 
+        << client[i].phone << "#//#" 
+        << client[i].balance << endl;
+    }
+    }else if(!file.is_open()){
+        cout << "ERROR in reading the file " << endl ;
+    }
+
+}
+
 void find_client(vector <Sclient> client){
     cout << "-----------------------------------" << endl ;
     cout << "       FIND CLIENT SCREAN    " << endl ;
@@ -259,6 +295,33 @@ void find_client(vector <Sclient> client){
     
 }
 
+void deposit(int number , vector <Sclient> client){
+    cout << "-----------------------------------" << endl ;
+    cout << "       DEPOSIT CLIENT SCREAN    " << endl ;
+    cout << "-----------------------------------" << endl ;
+    string ACN ;
+    float amount ;
+    cout << "Enter the amount you whant to deposit: " ;
+    cin >> amount ;
+    amount += stof(client[number].balance);
+    cout << "the new balance is : " << amount << endl ;
+    client[number].balance = to_string(amount) ;
+    updateC2(number,client);
+}
+
+void withdraw(int number , vector <Sclient> client){
+    cout << "-----------------------------------" << endl ;
+    cout << "       WITHDRAW CLIENT SCREAN    " << endl ;
+    cout << "-----------------------------------" << endl ;
+    string ACN ;
+    float amount ;
+    cout << "Enter the amount you whant to deposit: " ;
+    cin >> amount ;
+    amount -= stof(client[number].balance);
+    cout << "the new balance is : " << amount << endl ;
+    client[number].balance = to_string(amount) ;
+    updateC2(number,client);
+}
 
 int ShowMainMenue(){
     int number ;
@@ -281,6 +344,9 @@ int ShowMainMenue(){
 
 int ShowTransactionMenue(){
     int number ;
+    do
+    {
+   
     cout << "=============================================" << endl ;
     cout << "               TRANSACTION MENUE SCREEN    " << endl ;
     cout << "=============================================" << endl ;
@@ -292,13 +358,71 @@ int ShowTransactionMenue(){
     cout << "enter the number of the operation you whant to do: [1 to 4]: " ;
     cin >> number ;
     cout << endl ;
-    return number ;
+    if (number == 1 || number < 4){
+        ShowTransactionchois(number);}
+    
+    } while (number != 4);
+    
+}
+
+
+
+void ShowTransactionchois(int number){
+    vector <Sclient> vclient ;
+    string ACN ;
+    int place ;
+    vclient = fileToStructur("bank_info/database.txt");
+    switch (number){
+
+    case 1 :
+        cout << "enter the account number of the client you whant to deposit: " ;
+        cin >> ACN ;
+        if ((place = whereExist(vclient,ACN)) != -1){
+            deposit(place,vclient);
+            break;
+        }else
+        {
+            cout << "this account number dosn't exist in the database !" << endl ;
+        }
+        break;
+
+    case 2 : 
+        cout << "enter the account number of the client you whant to withdraw: " ;
+        cin >> ACN ;
+        if ((place = whereExist(vclient,ACN)) != -1){
+            withdraw(place,vclient);
+        }else
+        {
+            cout << "this account number dosn't exist in the database !" << endl ;
+        }
+        break;
+
+    case 3 :
+        cout << "enter the account number of the client you whant to see his total balance: " ;
+        cin >> ACN ;
+        if (place = (whereExist(vclient,ACN)) != -1){
+            cout << "the total balance of "<< vclient[place].name << " is : " << vclient[place].balance << endl ;
+        }else
+        {
+            cout << "this account number dosn't exist in the database !" << endl ;
+        }
+        break;
+
+    case 4 :
+        return ;
+
+    default:
+        cout << "ERROR enter a valide number !" << endl ;
+        break;
+    }
+    cout << "press ENTER to continue .... " ;
+    cin.get(); 
 }
     
 void ShowChois(int number){
     vector <Sclient> vclient ;
     string ACN ;
-
+    int transactionOption ;
     vclient = fileToStructur("bank_info/database.txt");
     switch (number){
 
@@ -327,12 +451,9 @@ void ShowChois(int number){
         break;
 
     case 6 :
-
+        transactionOption = ShowTransactionMenue() ;
+        ShowTransactionchois(transactionOption);
     break;
-
-    case 7 :
-        return ;
-
     default:
         cout << "ERROR enter a valide number !" << endl ;
         break;
@@ -349,7 +470,7 @@ void output(){
     {
     number = ShowMainMenue() ;
     ShowChois(number);
-    } while (number != 6);
+    } while (number != 7);
     cout << "-----------------------------------" << endl ;
     cout << "         GOOD BYE   " << endl ;
     cout << "-----------------------------------" << endl ;
