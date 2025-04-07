@@ -20,6 +20,7 @@ vector <string> lineTOvect(string line){
     string sWord = "" ;
     string Delim = "#//#" ; 
     vector <string> vString ;
+
     while ((pos = line.find(Delim)) != string::npos){
         sWord = line.substr(0, pos); 
             if (sWord != ""){
@@ -37,6 +38,7 @@ Sclient lineTOstruct( string line ){
     vector <string> str ;
     Sclient client ;
     str = lineTOvect(line);
+
     client.ac_number = str[0] ;
     client.pin = str[1] ;
     client.name = str[2] ;
@@ -56,7 +58,7 @@ vector <Sclient> fileToStructur( string filename){
     return bank_info ;
 }
 
-void showClient(vector <Sclient> hello){   
+void showClient(vector <Sclient>& hello){   
     cout << "                                CLIENT LIST : (" << hello.size() << ") client(s) " << endl ;
     cout << "_______________________________________________________________________________________________________________" << endl ;
     cout << "|" << setw(20) << left << " ACCOUNT NUMBER " << "|" << setw(15) << left << " PINE CODE " 
@@ -140,7 +142,7 @@ void addC(Sclient client ,vector <Sclient> vclient){
 void deletAC(int number , vector <Sclient> client){
     char delett ;
     bool sure = false;
-    ofstream file("bank_info/database.txt" , ios::app) ;
+
     cout << "-----------------------------------" << endl ;
     cout << "       DELETE CLIENT SCREAN    " << endl ;
     cout << "-----------------------------------" << endl ;
@@ -163,7 +165,7 @@ void deletAC(int number , vector <Sclient> client){
     if (sure)
     {
         ofstream file("bank_info/database.txt" , ios::out) ;
-    }
+   
     
     if (file.is_open() && sure){
     for (int i = 0; i < client.size(); i++)
@@ -180,18 +182,20 @@ void deletAC(int number , vector <Sclient> client){
     }
     }else if(!file.is_open()){
         cout << "ERROR in reading the file " << endl ;
-    }
+    } 
+}
 }
 
 
 void updateC(int number , vector <Sclient> client){
-    cout << "-----------------------------------" << endl ;
-    cout << "     UPDATE CLIENT INFO SCREAN    " << endl ;
-    cout << "-----------------------------------" << endl ;
-    ofstream file("bank_info/database.txt" , ios::app) ;
     Sclient updatt ;
     bool sure = false ;
     char updatte ;
+
+    cout << "-----------------------------------" << endl ;
+    cout << "     UPDATE CLIENT INFO SCREAN    " << endl ;
+    cout << "-----------------------------------" << endl ;
+    
     if (number == -1 ){
         cout << "this account number dosn't exist in the database !" << endl ;
         return;
@@ -214,7 +218,7 @@ void updateC(int number , vector <Sclient> client){
     if (sure)
     {
         ofstream file("bank_info/database.txt" , ios::out) ;
-    }
+    
     if (file.is_open() && sure){
     for (int i = 0; i < client.size(); i++)
     {
@@ -232,13 +236,14 @@ void updateC(int number , vector <Sclient> client){
     }else if(!file.is_open()){
         cout << "ERROR in reading the file " << endl ;
     }
-
+}
 }
 
 
-void updateC2(int number , vector <Sclient> client){
+void updateClientBalance(int number , vector <Sclient> client){
     Sclient updatt ;
     char updatte ;
+
     if (number == -1 ){
         cout << "this account number dosn't exist in the database !" << endl ;
         return;
@@ -250,7 +255,7 @@ void updateC2(int number , vector <Sclient> client){
     updatt.balance = client[number].balance ;
 
     
-    ofstream file("bank_info/database.txt" , ios::out) ;
+    ofstream file("bank_info/database.txt" , ios::out);
     if (file.is_open()){
     for (int i = 0; i < client.size(); i++)
     {
@@ -272,12 +277,14 @@ void updateC2(int number , vector <Sclient> client){
 }
 
 void find_client(vector <Sclient> client){
+    string ac ;
+
     cout << "-----------------------------------" << endl ;
     cout << "       FIND CLIENT SCREAN    " << endl ;
     cout << "-----------------------------------" << endl ;
-    string ac ;
     cout << "Enter the account number of the client ur looking for: " ;
     cin >> ac ;
+
     for (int i = 0; i < client.size() ; i++)
     {
         if (client[i].ac_number == ac )
@@ -292,35 +299,42 @@ void find_client(vector <Sclient> client){
         }
         
     }
-    
+    cout << endl ;
 }
 
 void deposit(int number , vector <Sclient> client){
     cout << "-----------------------------------" << endl ;
-    cout << "       DEPOSIT CLIENT SCREAN    " << endl ;
+    cout << " ========= DIPOSIT Money ========= " << endl ;
     cout << "-----------------------------------" << endl ;
     string ACN ;
     float amount ;
     cout << "Enter the amount you whant to deposit: " ;
-    cin >> amount ;
-    amount += stof(client[number].balance);
+    cin >> amount ;   
+    amount = stof(client[number].balance) + amount;
     cout << "the new balance is : " << amount << endl ;
     client[number].balance = to_string(amount) ;
-    updateC2(number,client);
+    updateClientBalance(number,client);
+    cout << endl ;
 }
 
 void withdraw(int number , vector <Sclient> client){
     cout << "-----------------------------------" << endl ;
-    cout << "       WITHDRAW CLIENT SCREAN    " << endl ;
+    cout << " ========= WITHDRAW Money ======== " << endl ;
     cout << "-----------------------------------" << endl ;
     string ACN ;
     float amount ;
-    cout << "Enter the amount you whant to deposit: " ;
+    cout << "Enter the amount you whant to withdraw: " ;
     cin >> amount ;
-    amount -= stof(client[number].balance);
-    cout << "the new balance is : " << amount << endl ;
-    client[number].balance = to_string(amount) ;
-    updateC2(number,client);
+
+    if (stof(client[number].balance) < amount) {
+        cout << "Insufficient balance!" << endl;
+        return;
+    }
+
+    client[number].balance = to_string(stof(client[number].balance) - amount);
+    cout << "the new balance is : " << client[number].balance << endl ;
+    updateClientBalance(number,client);
+    cout << endl ;
 }
 
 int ShowMainMenue(){
@@ -339,32 +353,9 @@ int ShowMainMenue(){
     cout << "enter the number of the operation you whant to do: [1 to 7]: " ;
     cin >> number ;
     cout << endl ;
+
     return number ;
 }
-
-int ShowTransactionMenue(){
-    int number ;
-    do
-    {
-   
-    cout << "=============================================" << endl ;
-    cout << "               TRANSACTION MENUE SCREEN    " << endl ;
-    cout << "=============================================" << endl ;
-    cout << "[1] deposit" << endl ;
-    cout << "[2] withdraw" << endl ;
-    cout << "[3] total balance " << endl ;
-    cout << "[4] main menue " << endl ;
-    cout << "=============================================" << endl ;
-    cout << "enter the number of the operation you whant to do: [1 to 4]: " ;
-    cin >> number ;
-    cout << endl ;
-    if (number == 1 || number < 4){
-        ShowTransactionchois(number);}
-    
-    } while (number != 4);
-    
-}
-
 
 
 void ShowTransactionchois(int number){
@@ -372,12 +363,14 @@ void ShowTransactionchois(int number){
     string ACN ;
     int place ;
     vclient = fileToStructur("bank_info/database.txt");
+
     switch (number){
 
     case 1 :
         cout << "enter the account number of the client you whant to deposit: " ;
         cin >> ACN ;
-        if ((place = whereExist(vclient,ACN)) != -1){
+        place = whereExist(vclient, ACN);
+        if (place != -1) {
             deposit(place,vclient);
             break;
         }else
@@ -400,7 +393,8 @@ void ShowTransactionchois(int number){
     case 3 :
         cout << "enter the account number of the client you whant to see his total balance: " ;
         cin >> ACN ;
-        if (place = (whereExist(vclient,ACN)) != -1){
+        place = (whereExist(vclient,ACN));
+        if ((whereExist(vclient,ACN)) != -1){
             cout << "the total balance of "<< vclient[place].name << " is : " << vclient[place].balance << endl ;
         }else
         {
@@ -415,15 +409,42 @@ void ShowTransactionchois(int number){
         cout << "ERROR enter a valide number !" << endl ;
         break;
     }
+    cin.ignore();
     cout << "press ENTER to continue .... " ;
     cin.get(); 
 }
+
+
+void ShowTransactionMenue(){
+    int number ;
+
+    do
+    {
+    cout << "=============================================" << endl ;
+    cout << "               TRANSACTION MENUE SCREEN    " << endl ;
+    cout << "=============================================" << endl ;
+    cout << "[1] deposit" << endl ;
+    cout << "[2] withdraw" << endl ;
+    cout << "[3] total balance " << endl ;
+    cout << "[4] main menue " << endl ;
+    cout << "=============================================" << endl ;
+    cout << "enter the number of the operation you whant to do: [1 to 4]: " ;
+    cin >> number ;
+    cout << endl ;
+
+    if (number >= 1 && number <= 3) {
+        ShowTransactionchois(number);
+    } }while (number != 4);
+
+}
+
     
 void ShowChois(int number){
     vector <Sclient> vclient ;
     string ACN ;
     int transactionOption ;
     vclient = fileToStructur("bank_info/database.txt");
+
     switch (number){
 
     case 1 :
@@ -451,9 +472,15 @@ void ShowChois(int number){
         break;
 
     case 6 :
-        transactionOption = ShowTransactionMenue() ;
-        ShowTransactionchois(transactionOption);
+        ShowTransactionMenue() ;
     break;
+
+    case 7 : 
+        cout << "-----------------------------------" << endl ;
+        cout << "       GOOD BYE   " << endl ;
+        cout << "-----------------------------------" << endl ;
+        return;
+        break;
     default:
         cout << "ERROR enter a valide number !" << endl ;
         break;
@@ -463,7 +490,6 @@ void ShowChois(int number){
     cin.get(); 
 }
 
-
 void output(){
     int number = 0 ;
     do
@@ -471,9 +497,6 @@ void output(){
     number = ShowMainMenue() ;
     ShowChois(number);
     } while (number != 7);
-    cout << "-----------------------------------" << endl ;
-    cout << "         GOOD BYE   " << endl ;
-    cout << "-----------------------------------" << endl ;
 }
 
 int main (){
